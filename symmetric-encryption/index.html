@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symmetric Encryption Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Symmetric Encryption Tool</h1>
+        <div class="input-group">
+            <label for="secret-key">Secret Key:</label>
+            <input type="password" id="secret-key" class="input-field">
+        </div>
+        <div class="text-area-group">
+            <div class="text-area-container">
+                <label for="plaintext">Plaintext:</label>
+                <textarea id="plaintext" class="text-area"></textarea>
+                <button id="encrypt-btn" class="action-btn">
+                    <img src="encrypt_icon.png" alt="Encrypt">
+                    Encrypt
+                </button>
+            </div>
+            <div class="text-area-container">
+                <label for="encrypted">Base64-Encoded Binary (Encrypted Data):</label>
+                <textarea id="encrypted" class="text-area"></textarea>
+                <button id="decrypt-btn" class="action-btn">
+                    <img src="decrypt_icon.png" alt="Decrypt">
+                    Decrypt
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
