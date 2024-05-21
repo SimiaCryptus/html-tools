@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datetime Converter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Datetime Converter</h1>
+        <form id="datetime-form">
+            <div class="form-group">
+                <label for="iso-datetime">ISO 8601:</label>
+                <input type="text" id="iso-datetime" class="datetime-input" placeholder="YYYY-MM-DDTHH:MM:SSZ">
+            </div>
+            <div class="form-group">
+                <label for="unix-timestamp">Unix Timestamp:</label>
+                <input type="text" id="unix-timestamp" class="datetime-input" placeholder="1609459200">
+            </div>
+            <div class="form-group">
+                <label for="local-datetime">Local Datetime:</label>
+                <input type="text" id="local-datetime" class="datetime-input" placeholder="MM/DD/YYYY HH:MM:SS">
+            </div>
+            <div class="form-group">
+                <label for="utc-datetime">UTC Datetime:</label>
+                <input type="text" id="utc-datetime" class="datetime-input" placeholder="YYYY-MM-DD HH:MM:SS UTC">
+            </div>
+    <button type="button" id="set-today-button">Set to Today</button>
+    <button type="button" id="duration-button">Add/Subtract Duration</button>
+            <button type="button" id="clear-button">Clear</button>
+        </form>
+    </div>
+<div id="duration-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Add/Subtract Duration</h2>
+        <form id="duration-form">
+            <div class="form-group">
+                <label for="seconds">Seconds:</label>
+                <input type="number" id="seconds" class="duration-input" placeholder="0">
+            </div>
+            <div class="form-group">
+                <label for="minutes">Minutes:</label>
+                <input type="number" id="minutes" class="duration-input" placeholder="0">
+            </div>
+            <div class="form-group">
+                <label for="hours">Hours:</label>
+                <input type="number" id="hours" class="duration-input" placeholder="0">
+            </div>
+            <div class="form-group">
+                <label for="days">Days:</label>
+                <input type="number" id="days" class="duration-input" placeholder="0">
+            </div>
+            <button type="button" id="apply-duration-button">Apply</button>
+        </form>
+    </div>
+</div>
+    <script src="script.js"></script>
+</body>
+</html>
