@@ -8,10 +8,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>Requirements Checker</h1>
+        <h1>PIP Analysis Tool</h1>
        <p>Paste the content of your <code>requirements.txt</code> file below and click "Check Latest Versions" to see the latest versions of the packages.</p>
         <textarea id="requirements-input" placeholder="Paste your requirements.txt content here" spellcheck="false"></textarea>
         <button id="check-versions">Check Latest Versions</button>
+       <button id="generate-requirements" style="display:none;">Generate New Requirements</button>
         <div id="results"></div>
        <div id="modal" class="modal">
            <div class="modal-content">
@@ -19,6 +20,13 @@
                <div id="modal-details"></div>
            </div>
        </div>
+      <div id="requirements-modal" class="modal">
+          <div class="modal-content">
+              <span class="close-requirements">&times;</span>
+              <h2>New requirements.txt</h2>
+              <textarea id="new-requirements" readonly></textarea>
+          </div>
+      </div>
     </div>
     <script src="script.js"></script>
 </body>
