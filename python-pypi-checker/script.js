@@ -36,11 +36,22 @@ document.getElementById('check-versions').addEventListener('click', async () => 
     };
 
     const packageVersions = await Promise.all(packages.map(async (pkg) => {
-        const [packageName, currentVersion] = pkg.split('==').map(part => part.trim());
+        const match = pkg.match(/(.*?)(==|>=|>)(.*)/);
+        if (null==match) {
+            const packageName = pkg.trim();
+            const packageInfo = await fetchPackageVersion(packageName); 
+            console.log(`Fetched info for ${packageName}:`, packageInfo);
+            const currentVersion = '';
+           const operator = '';
+            return {packageName, currentVersion, operator, packageInfo};
+        }
+        const packageName = match[1].trim();
+        const operator = match[2];
+        const currentVersion = match[3].trim();
         console.log(`Processing package: ${packageName}`);
         const packageInfo = await fetchPackageVersion(packageName);
         console.log(`Fetched info for ${packageName}:`, packageInfo);
-        return {packageName, currentVersion, packageInfo};
+        return {packageName, currentVersion, operator, packageInfo};
     }));
 
     const escapeHtml = (unsafe) => {
@@ -56,13 +67,13 @@ document.getElementById('check-versions').addEventListener('click', async () => 
     console.log('Package versions:', packageVersions);
 
     let resultsHtml = '<table><thead><tr><th>Package</th><th>Current Version</th><th>New Version</th></tr></thead><tbody>';
-    packageVersions.forEach(({packageName, currentVersion, packageInfo}) => {
+    packageVersions.forEach(({packageName, currentVersion, operator, packageInfo}) => {
         if (packageInfo.error) {
             console.error(`Error for package ${packageName}:`, packageInfo.error);
-            resultsHtml += `<tr><td>${escapeHtml(packageName)}</td><td>${escapeHtml(currentVersion || 'N/A')}</td><td>${escapeHtml(packageInfo.error)}</td></tr>`;
+            resultsHtml += `<tr><td>${escapeHtml(packageName)}</td><td>${escapeHtml(operator + ' ' + (currentVersion || 'N/A'))}</td><td>${escapeHtml(packageInfo.error)}</td></tr>`;
         } else {
             console.log(`Adding row for package ${packageName} with version ${packageInfo.version}`);
-            resultsHtml += `<tr class="package-row" data-package='${escapeHtml(JSON.stringify(packageInfo))}'><td>${escapeHtml(packageName)}</td><td>${escapeHtml(currentVersion || 'N/A')}</td><td class="new-version">${escapeHtml(packageInfo.version)}</td></tr>`;
+            resultsHtml += `<tr class="package-row" data-package='${escapeHtml(JSON.stringify(packageInfo))}'><td>${escapeHtml(packageName)}</td><td>${escapeHtml(operator + ' ' + (currentVersion || 'N/A'))}</td><td class="new-version">${escapeHtml(currentVersion === '' ? '' : (packageInfo.version || ''))}</td></tr>`;
         }
     });
     resultsHtml += '</tbody></table>';
@@ -105,17 +116,22 @@ document.getElementById('check-versions').addEventListener('click', async () => 
                     Object.keys(data.releases).forEach(version => {
                         const option = document.createElement('option');
                         option.value = version;
+                       option.textContent = version;
                         if (version === currentVersion) {
                              option.selected = true; // Select the new version by default
                         }
-                        option.textContent = version;
                         versionsDropdown.appendChild(option);
                         const listItem = document.createElement('li');
                         listItem.setAttribute('data-version', version);
-                        listItem.setAttribute('data-package', escapeHtml(JSON.stringify(data.releases[version])));
-                        listItem.textContent = version;
-                        versionsList.appendChild(listItem);
-                    });
+                       listItem.setAttribute('data-package', escapeHtml(JSON.stringify(data.releases[version])));
+                       listItem.textContent = version;
+                       versionsList.appendChild(listItem);
+                   });
+                   // Add <No Version> option
+                   const noVersionOption = document.createElement('option');
+                   noVersionOption.value = '';
+                   noVersionOption.textContent = '<No Version>';
+                   versionsDropdown.insertBefore(noVersionOption, versionsDropdown.firstChild);
                 }
             } catch (error) {
                 console.error(`Error fetching all versions for ${packageInfo.name}: ${error.message}`);
@@ -124,17 +140,23 @@ document.getElementById('check-versions').addEventListener('click', async () => 
             // Add event listener to update modal details when a different version is selected
             document.getElementById('all-versions').addEventListener('change', (event) => {
                 const selectedVersion = event.target.value;
-                const selectedPackageInfo = allVersionsData.releases[selectedVersion]; // Use the stored data
+                let selectedPackageInfo = allVersionsData.releases[selectedVersion]; // Use the stored data
+                if (null == selectedPackageInfo) selectedPackageInfo = packageInfo;
                 const versionsDropdownHtml = document.getElementById('all-versions').outerHTML; // Get the current dropdown HTML
+                let summary = selectedPackageInfo.summary || packageInfo.summary;
+                let author = selectedPackageInfo.author || packageInfo.author;
+                let author_email = selectedPackageInfo.author_email || packageInfo.author_email;
+                let license = selectedPackageInfo.license || packageInfo.license;
+                let home_page = selectedPackageInfo.home_page || packageInfo.home_page;
                 modalDetails.innerHTML = `
                     <h2>${escapeHtml(packageInfo.name)}</h2>
                     <p><strong>Selected Version:</strong> ${escapeHtml(selectedVersion)}</p>
                     ${versionsDropdownHtml} <!-- Re-insert the dropdown HTML -->
-                    <p><strong>Summary:</strong> ${escapeHtml(selectedPackageInfo.summary || packageInfo.summary)}</p>
-                    <p><strong>Author:</strong> ${escapeHtml(selectedPackageInfo.author || packageInfo.author)}</p>
-                    <p><strong>Author Email:</strong> ${escapeHtml(selectedPackageInfo.author_email || packageInfo.author_email)}</p>
-                    <p><strong>License:</strong> ${escapeHtml(selectedPackageInfo.license || packageInfo.license)}</p>
-                    <p><strong>Home Page:</strong> <a href="${escapeHtml(selectedPackageInfo.home_page || packageInfo.home_page)}" target="_blank">${escapeHtml(selectedPackageInfo.home_page || packageInfo.home_page)}</a></p>
+                    <p><strong>Summary:</strong> ${escapeHtml(summary)}</p>
+                    <p><strong>Author:</strong> ${escapeHtml(author)}</p>
+                    <p><strong>Author Email:</strong> ${escapeHtml(author_email)}</p>
+                    <p><strong>License:</strong> ${escapeHtml(license)}</p>
+                    <p><strong>Home Page:</strong> <a href="${escapeHtml(home_page)}" target="_blank">${escapeHtml(home_page)}</a></p>
                 `;
                 // Update the main table with the new version
                 row.querySelector('.new-version').textContent = escapeHtml(selectedVersion);
@@ -190,7 +212,16 @@ document.getElementById('generate-requirements').addEventListener('click', () =>
     rows.forEach(row => {
         const packageName = row.children[0].textContent;
         const newVersion = row.querySelector('.new-version').textContent;
-        newRequirements += `${packageName}==${newVersion}\n`;
+        const currentVersion = row.children[1].textContent;
+        let match = currentVersion.match(/(==|>=|>)/);
+        const operator = (null == match) ? '' : match[0];
+       if (newVersion === '<No Version>') {
+           newRequirements += `${packageName}\n`;
+       } else if (currentVersion && operator && newVersion && currentVersion !== 'N/A') {
+           newRequirements += `${packageName}${operator}${newVersion}\n`;
+       } else {
+           newRequirements += `${packageName}${newVersion}\n`;
+       }
     });
     document.getElementById('new-requirements').value = newRequirements;
     document.getElementById('requirements-modal').style.display = 'block';
