@@ -114,3 +114,11 @@ h1 {
         width: 100%;
     }
 }
+
+.nav-icon {
+    width: 24px;
+    height: 24px;
+    max-width: 100%;
+    height: auto;
+    margin-left: 10px;
+}
