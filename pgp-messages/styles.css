@@ -1,0 +1,151 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Main Container */
+.container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Header Styles */
+header {
+    background: #333;
+    color: #fff;
+    padding: 20px;
+    min-height: 70px;
+    border-bottom: #77aaff 3px solid;
+    background: #333;
+    color: #fff;
+    overflow: hidden;
+    padding: 10px 0;
+}
+
+header .logo {
+    float: left;
+    width: 50px;
+    height: 50px;
+}
+
+header h1 {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.main-nav {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.main-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.main-nav ul li {
+    margin: 0;
+}
+
+.main-nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.main-nav ul li a:hover {
+    text-decoration: underline;
+}
+
+#key-generation-section input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+section {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #fff;
+    border: #ccc 1px solid;
+    border-radius: 5px;
+}
+
+/* Textarea Styles */
+
+textarea {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Input Styles */
+
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Button Styles */
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+}
+
+.main-nav ul li a:hover, button:hover {
+    width: 100%;
+    padding: 10px;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+/* Form Section Styles */
+#key-generation-section input,
+#generate-section textarea,
+#read-section textarea
+
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+
+    header .logo {
+        display: none;
+    }
+
+    header h1 {
+        font-size: 1.5em;
+    }
+}
