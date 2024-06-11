@@ -1,18 +1,22 @@
 # Python PyPI Checker
 
-This project is a web-based tool for analyzing and updating the packages listed in your `requirements.txt` file. It fetches the latest versions of the packages from PyPI and allows you to generate an updated `requirements.txt`.
+This project is a web-based tool for analyzing and updating the packages listed in your `requirements.txt` file. It
+fetches the latest versions of the packages from PyPI and allows you to generate an updated `requirements.txt`.
 
 ## Features
 
 - **Paste Requirements**: Paste the content of your `requirements.txt` file into the provided textarea.
-- **Check Latest Versions**: Click the "Check Latest Versions" button to fetch the latest versions of the packages from PyPI.
-- **View Package Details**: Click on any package row to view detailed information about the package, including all available versions.
+- **Check Latest Versions**: Click the "Check Latest Versions" button to fetch the latest versions of the packages from
+  PyPI.
+- **View Package Details**: Click on any package row to view detailed information about the package, including all
+  available versions.
 - **Generate New Requirements**: Generate a new `requirements.txt` file with the latest versions of the packages.
 
 ## How to Use
 
 1. Clone the repository:
     ```
+
 <div id="znofak"></div>sh
     git clone https://github.com/yourusername/python-pypi-checker.git
     cd python-pypi-checker
@@ -26,7 +30,8 @@ This project is a web-based tool for analyzing and updating the packages listed 
 
 5. Click on any package row to view detailed information about the package.
 
-6. Click the "Generate New Requirements" button to generate a new `requirements.txt` file with the latest versions of the packages.
+6. Click the "Generate New Requirements" button to generate a new `requirements.txt` file with the latest versions of
+   the packages.
 
 ## Files
 

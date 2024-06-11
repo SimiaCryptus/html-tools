@@ -2,49 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>PGP Message Generator/Reader</title>
-   <link rel="stylesheet" href="styles.css">
+    <link href="styles.css" rel="stylesheet">
     <script src="openpgp.js"></script>
 </head>
 <body>
 <nav class="main-nav">
     <ul>
         <li><a href="../index.html">Home</a></li>
+        <li><a href="../npm-checker/index.html">NPM Upgrader</a></li>
         <li><a href="../python-pypi-checker/index.html">Pip Upgrader</a></li>
         <li><a href="../datetime-formats/index.html">Datetime Converter</a></li>
         <li><a href="../symmetric-encryption/index.html">Symmetric Encryption Tool</a></li>
-       <li><a href="../pgp-messages/index.html">PGP Message Generator/Reader</a></li>
+        <li><a href="../pgp-messages/index.html">PGP Message Generator/Reader</a></li>
+        <li><a href="../hashing-tool/index.html">Hashing Tool</a></li>
     </ul>
 </nav>
 <div class="container">
     <header class="header">
-        <img src="icon.png" alt="Logo" class="logo">
+        <img alt="Logo" class="logo" src="icon.png">
         <h1>PGP Message Generator/Reader</h1>
     </header>
     <section id="key-generation-section">
         <h2>Generate PGP Keys</h2>
-        <input type="text" id="key-name" placeholder="Enter your name">
-        <input type="email" id="key-email" placeholder="Enter your email">
-        <input type="password" id="key-passphrase" placeholder="Enter a passphrase">
+        <input id="key-name" placeholder="Enter your name" type="text">
+        <input id="key-email" placeholder="Enter your email" type="email">
+        <input id="key-passphrase" placeholder="Enter a passphrase" type="password">
         <button id="generate-key-button">Generate Keys</button>
-        <textarea id="generated-public-key" readonly placeholder="Generated public key will appear here"></textarea>
-        <textarea id="generated-private-key" readonly placeholder="Generated private key will appear here"></textarea>
+        <textarea id="generated-public-key" placeholder="Generated public key will appear here" readonly></textarea>
+        <textarea id="generated-private-key" placeholder="Generated private key will appear here" readonly></textarea>
     </section>
     <section id="generate-section">
         <h2>Generate PGP Message</h2>
         <textarea id="message-to-encrypt" placeholder="Enter your message here"></textarea>
         <textarea id="public-key" placeholder="Enter recipient's public key"></textarea>
         <button id="encrypt-button">Encrypt Message</button>
-        <textarea id="encrypted-message" readonly placeholder="Encrypted message will appear here"></textarea>
+        <textarea id="encrypted-message" placeholder="Encrypted message will appear here" readonly></textarea>
     </section>
     <section id="read-section">
         <h2>Read PGP Message</h2>
         <textarea id="message-to-decrypt" placeholder="Enter encrypted message here"></textarea>
         <textarea id="private-key" placeholder="Enter your private key"></textarea>
-        <input type="password" id="passphrase" placeholder="Enter your passphrase">
+        <input id="passphrase" placeholder="Enter your passphrase" type="password">
         <button id="decrypt-button">Decrypt Message</button>
-        <textarea id="decrypted-message" readonly placeholder="Decrypted message will appear here"></textarea>
+        <textarea id="decrypted-message" placeholder="Decrypted message will appear here" readonly></textarea>
     </section>
 </div>
 <script src="app.js"></script>

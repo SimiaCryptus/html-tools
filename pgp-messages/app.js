@@ -6,11 +6,11 @@ document.getElementById('encrypt-button').addEventListener('click', async () => 
 
     try {
         // Read the public key
-        const publicKey = await openpgp.readKey({ armoredKey: publicKeyArmored });
+        const publicKey = await openpgp.readKey({armoredKey: publicKeyArmored});
 
         // Encrypt the message
         const encryptedMessage = await openpgp.encrypt({
-            message: await openpgp.createMessage({ text: message }),
+            message: await openpgp.createMessage({text: message}),
             encryptionKeys: publicKey
         });
 
@@ -31,7 +31,7 @@ document.getElementById('decrypt-button').addEventListener('click', async () => 
     try {
         // Read and decrypt the private key
         const privateKey = await openpgp.decryptKey({
-            privateKey: await openpgp.readPrivateKey({ armoredKey: privateKeyArmored }),
+            privateKey: await openpgp.readPrivateKey({armoredKey: privateKeyArmored}),
             passphrase
         });
 
@@ -41,7 +41,7 @@ document.getElementById('decrypt-button').addEventListener('click', async () => 
         });
 
         // Decrypt the message
-        const { data: decryptedMessage } = await openpgp.decrypt({
+        const {data: decryptedMessage} = await openpgp.decrypt({
             message,
             decryptionKeys: privateKey
         });
@@ -75,7 +75,7 @@ document.getElementById('generate-key-button').addEventListener('click', async (
         openpgp.generateKey({
             type: 'ecc', // Type of the key, defaults to ECC
             curve: 'curve25519', // ECC curve name, defaults to curve25519
-            userIDs: [{ name: name.trim(), email: email.trim() }],
+            userIDs: [{name: name.trim(), email: email.trim()}],
             format: 'armored',
             passphrase: passphrase.trim()
         }).then((key) => {

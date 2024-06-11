@@ -1,6 +1,6 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Event listener for the encrypt button
-    document.getElementById('encrypt-btn').addEventListener('click', function() {
+    document.getElementById('encrypt-btn').addEventListener('click', function () {
         const secretKey = document.getElementById('secret-key').value;
         const plaintext = document.getElementById('plaintext').value;
         if (secretKey && plaintext) {
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Event listener for the decrypt button
-    document.getElementById('decrypt-btn').addEventListener('click', function() {
+    document.getElementById('decrypt-btn').addEventListener('click', function () {
         const secretKey = document.getElementById('secret-key').value;
         const encrypted = document.getElementById('encrypted').value;
         if (secretKey && encrypted) {
@@ -29,12 +29,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const encoder = new TextEncoder();
         const data = encoder.encode(plaintext);
         const keyData = encoder.encode(key);
-        
-         // Encrypt the data using a simple XOR with the key
+
+        // Encrypt the data using a simple XOR with the key
         const encryptedData = data.map((byte, index) => byte ^ keyData[index % keyData.length]);
-         
+
         // Convert the Uint8Array to base64 string
-         const base64String = btoa(String.fromCharCode.apply(null, encryptedData));
+        const base64String = btoa(String.fromCharCode.apply(null, encryptedData));
         return base64String;
     }
 
@@ -42,19 +42,19 @@ document.addEventListener('DOMContentLoaded', function() {
     function decrypt(encrypted, key) {
         // Decode the base64 string to Uint8Array
         const binaryString = atob(encrypted);
-         const encryptedData = new Uint8Array([...binaryString].map(char => char.charCodeAt(0)));
-         
-         // Decode the key to Uint8Array
-         const encoder = new TextEncoder();
+        const encryptedData = new Uint8Array([...binaryString].map(char => char.charCodeAt(0)));
+
+        // Decode the key to Uint8Array
+        const encoder = new TextEncoder();
         const keyData = encoder.encode(key);
-         
-         // Decrypt the data using a simple XOR with the key
+
+        // Decrypt the data using a simple XOR with the key
         const decryptedData = encryptedData.map((byte, index) => byte ^ keyData[index % keyData.length]);
-        
+
         // Decode the Uint8Array to string
         const decoder = new TextDecoder();
-         const decodedString = decoder.decode(decryptedData);
-        
+        const decodedString = decoder.decode(decryptedData);
+
         return decodedString;
     }
 });

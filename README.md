@@ -1,6 +1,7 @@
 # PIP Analysis Tool
 
-The PIP Analysis Tool is a web application that helps you check the latest versions of the packages listed in your `requirements.txt` file. It fetches the latest versions from PyPI and displays them in a user-friendly interface.
+The PIP Analysis Tool is a web application that helps you check the latest versions of the packages listed in
+your `requirements.txt` file. It fetches the latest versions from PyPI and displays them in a user-friendly interface.
 
 ## Features
 

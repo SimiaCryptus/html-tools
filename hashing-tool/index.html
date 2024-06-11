@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Symmetric Encryption Tool</title>
+    <title>Hashing Tool</title>
     <link href="../styles.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
 </head>
@@ -20,27 +20,19 @@
     </ul>
 </nav>
 <div class="container">
-    <h1>Symmetric Encryption Tool</h1>
-    <div class="input-group">
-        <label for="secret-key">Secret Key:</label>
-        <input class="input-field" id="secret-key" type="password">
-    </div>
+    <h1>Hashing Tool</h1>
     <div class="text-area-group">
         <div class="text-area-container">
-            <label for="plaintext">Plaintext:</label>
-            <textarea class="text-area" id="plaintext"></textarea>
-            <button class="action-btn" id="encrypt-btn">
-                <img alt="Encrypt" src="encrypt_icon.png">
-                Encrypt
+            <label for="input-text">Input Text:</label>
+            <textarea class="text-area" id="input-text"></textarea>
+            <button class="action-btn" id="hash-btn">
+                <img alt="Hash" src="hash_icon.png">
+                Hash
             </button>
         </div>
         <div class="text-area-container">
-            <label for="encrypted">Base64-Encoded Binary (Encrypted Data):</label>
-            <textarea class="text-area" id="encrypted"></textarea>
-            <button class="action-btn" id="decrypt-btn">
-                <img alt="Decrypt" src="decrypt_icon.png">
-                Decrypt
-            </button>
+            <label for="hashed">SHA-256 Hashed Output:</label>
+            <textarea class="text-area" id="hashed"></textarea>
         </div>
     </div>
 </div>

@@ -37,12 +37,12 @@ document.getElementById('check-versions').addEventListener('click', async () => 
 
     const packageVersions = await Promise.all(packages.map(async (pkg) => {
         const match = pkg.match(/(.*?)(==|>=|>)(.*)/);
-        if (null==match) {
+        if (null == match) {
             const packageName = pkg.trim();
-            const packageInfo = await fetchPackageVersion(packageName); 
+            const packageInfo = await fetchPackageVersion(packageName);
             console.log(`Fetched info for ${packageName}:`, packageInfo);
             const currentVersion = '';
-           const operator = '';
+            const operator = '';
             return {packageName, currentVersion, operator, packageInfo};
         }
         const packageName = match[1].trim();
@@ -79,8 +79,8 @@ document.getElementById('check-versions').addEventListener('click', async () => 
     resultsHtml += '</tbody></table>';
     results.innerHTML = resultsHtml;
 
-   // Show the "Generate New Requirements" button
-   document.getElementById('generate-requirements').style.display = 'block';
+    // Show the "Generate New Requirements" button
+    document.getElementById('generate-requirements').style.display = 'block';
 
     console.log('Package versions:', packageVersions);
 
@@ -116,22 +116,22 @@ document.getElementById('check-versions').addEventListener('click', async () => 
                     Object.keys(data.releases).forEach(version => {
                         const option = document.createElement('option');
                         option.value = version;
-                       option.textContent = version;
+                        option.textContent = version;
                         if (version === currentVersion) {
-                             option.selected = true; // Select the new version by default
+                            option.selected = true; // Select the new version by default
                         }
                         versionsDropdown.appendChild(option);
                         const listItem = document.createElement('li');
                         listItem.setAttribute('data-version', version);
-                       listItem.setAttribute('data-package', escapeHtml(JSON.stringify(data.releases[version])));
-                       listItem.textContent = version;
-                       versionsList.appendChild(listItem);
-                   });
-                   // Add <No Version> option
-                   const noVersionOption = document.createElement('option');
-                   noVersionOption.value = '';
-                   noVersionOption.textContent = '<No Version>';
-                   versionsDropdown.insertBefore(noVersionOption, versionsDropdown.firstChild);
+                        listItem.setAttribute('data-package', escapeHtml(JSON.stringify(data.releases[version])));
+                        listItem.textContent = version;
+                        versionsList.appendChild(listItem);
+                    });
+                    // Add <No Version> option
+                    const noVersionOption = document.createElement('option');
+                    noVersionOption.value = '';
+                    noVersionOption.textContent = '<No Version>';
+                    versionsDropdown.insertBefore(noVersionOption, versionsDropdown.firstChild);
                 }
             } catch (error) {
                 console.error(`Error fetching all versions for ${packageInfo.name}: ${error.message}`);
@@ -188,20 +188,20 @@ document.getElementById('check-versions').addEventListener('click', async () => 
         document.getElementById('modal').style.display = 'none';
     });
 
-   document.querySelector('.close-requirements').addEventListener('click', () => {
-       console.log('Requirements modal close button clicked');
-       document.getElementById('requirements-modal').style.display = 'none';
-   });
+    document.querySelector('.close-requirements').addEventListener('click', () => {
+        console.log('Requirements modal close button clicked');
+        document.getElementById('requirements-modal').style.display = 'none';
+    });
 
     window.addEventListener('click', (event) => {
         const modal = document.getElementById('modal');
-       const requirementsModal = document.getElementById('requirements-modal');
+        const requirementsModal = document.getElementById('requirements-modal');
         if (event.target == modal) {
             console.log('Window clicked outside modal');
             modal.style.display = 'none';
-       } else if (event.target == requirementsModal) {
-           console.log('Window clicked outside requirements modal');
-           requirementsModal.style.display = 'none';
+        } else if (event.target == requirementsModal) {
+            console.log('Window clicked outside requirements modal');
+            requirementsModal.style.display = 'none';
         }
     });
 });
@@ -215,13 +215,13 @@ document.getElementById('generate-requirements').addEventListener('click', () =>
         const currentVersion = row.children[1].textContent;
         let match = currentVersion.match(/(==|>=|>)/);
         const operator = (null == match) ? '' : match[0];
-       if (newVersion === '<No Version>') {
-           newRequirements += `${packageName}\n`;
-       } else if (currentVersion && operator && newVersion && currentVersion !== 'N/A') {
-           newRequirements += `${packageName}${operator}${newVersion}\n`;
-       } else {
-           newRequirements += `${packageName}${newVersion}\n`;
-       }
+        if (newVersion === '<No Version>') {
+            newRequirements += `${packageName}\n`;
+        } else if (currentVersion && operator && newVersion && currentVersion !== 'N/A') {
+            newRequirements += `${packageName}${operator}${newVersion}\n`;
+        } else {
+            newRequirements += `${packageName}${newVersion}\n`;
+        }
     });
     document.getElementById('new-requirements').value = newRequirements;
     document.getElementById('requirements-modal').style.display = 'block';

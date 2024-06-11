@@ -2,7 +2,9 @@
 
 ## Overview
 
-The Datetime Converter is a web application that allows users to convert between different datetime formats. The supported formats include ISO 8601, Unix Timestamp, Local Datetime, and UTC Datetime. Users can also set the current datetime, clear all fields, and add or subtract durations from the current datetime.
+The Datetime Converter is a web application that allows users to convert between different datetime formats. The
+supported formats include ISO 8601, Unix Timestamp, Local Datetime, and UTC Datetime. Users can also set the current
+datetime, clear all fields, and add or subtract durations from the current datetime.
 
 ## Features
 
@@ -20,7 +22,8 @@ The Datetime Converter is a web application that allows users to convert between
 2. **Input Datetime**: Enter a datetime value in any of the supported formats.
 3. **Convert**: The application will automatically convert the input to all other formats.
 4. **Set to Today**: Click the "Set to Today" button to set all fields to the current datetime.
-5. **Add/Subtract Duration**: Click the "Add/Subtract Duration" button to open a modal where you can specify the duration to add or subtract.
+5. **Add/Subtract Duration**: Click the "Add/Subtract Duration" button to open a modal where you can specify the
+   duration to add or subtract.
 6. **Clear Fields**: Click the "Clear" button to clear all input fields.
 
 ## Files
