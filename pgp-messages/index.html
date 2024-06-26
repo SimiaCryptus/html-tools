@@ -8,6 +8,14 @@
     <script src="openpgp.js"></script>
 </head>
 <body>
+<div id="key-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modal-title"></h2>
+        <textarea id="modal-key-content" readonly></textarea>
+        <button id="delete-key-button">Delete Key</button>
+    </div>
+</div>
 <nav class="main-nav">
     <ul>
         <li><a href="../index.html">Home</a></li>
@@ -24,30 +32,81 @@
         <img alt="Logo" class="logo" src="icon.png">
         <h1>PGP Message Generator/Reader</h1>
     </header>
-    <section id="key-generation-section">
-        <h2>Generate PGP Keys</h2>
-        <input id="key-name" placeholder="Enter your name" type="text">
-        <input id="key-email" placeholder="Enter your email" type="email">
-        <input id="key-passphrase" placeholder="Enter a passphrase" type="password">
-        <button id="generate-key-button">Generate Keys</button>
-        <textarea id="generated-public-key" placeholder="Generated public key will appear here" readonly></textarea>
-        <textarea id="generated-private-key" placeholder="Generated private key will appear here" readonly></textarea>
-    </section>
-    <section id="generate-section">
-        <h2>Generate PGP Message</h2>
-        <textarea id="message-to-encrypt" placeholder="Enter your message here"></textarea>
-        <textarea id="public-key" placeholder="Enter recipient's public key"></textarea>
-        <button id="encrypt-button">Encrypt Message</button>
-        <textarea id="encrypted-message" placeholder="Encrypted message will appear here" readonly></textarea>
-    </section>
-    <section id="read-section">
-        <h2>Read PGP Message</h2>
-        <textarea id="message-to-decrypt" placeholder="Enter encrypted message here"></textarea>
-        <textarea id="private-key" placeholder="Enter your private key"></textarea>
-        <input id="passphrase" placeholder="Enter your passphrase" type="password">
-        <button id="decrypt-button">Decrypt Message</button>
-        <textarea id="decrypted-message" placeholder="Decrypted message will appear here" readonly></textarea>
-    </section>
+    <div class="tabs">
+        <button class="tab-button active" onclick="openTab(event, 'Messaging')">Messaging</button>
+        <button class="tab-button" onclick="openTab(event, 'KeyManagement')">Key Management</button>
+    </div>
+
+    <div id="Messaging" class="tab-content active">
+        <section id="generate-section">
+            <h2>Generate PGP Message</h2>
+            <textarea id="message-to-encrypt" placeholder="Enter your message here"></textarea>
+            <select id="public-key-select">
+                <option value="">Select recipient's public key</option>
+            </select>
+            <button id="encrypt-button">Encrypt Message</button>
+            <textarea id="encrypted-message" placeholder="Encrypted message will appear here" readonly></textarea>
+        </section>
+        <section id="read-section">
+            <h2>Read PGP Message</h2>
+            <textarea id="message-to-decrypt" placeholder="Enter encrypted message here"></textarea>
+            <select id="private-key-select">
+                <option value="">Select your private key</option>
+            </select>
+            <input id="passphrase" placeholder="Enter your passphrase" type="password">
+            <button id="decrypt-button">Decrypt Message</button>
+            <textarea id="decrypted-message" placeholder="Decrypted message will appear here" readonly></textarea>
+        </section>
+    </div>
+
+    <div id="KeyManagement" class="tab-content">
+        <section id="key-generation-section">
+            <h2>Generate PGP Keys</h2>
+            <input id="key-name" placeholder="Enter your name" type="text">
+            <input id="key-email" placeholder="Enter your email" type="email">
+            <input id="key-passphrase" placeholder="Enter a passphrase" type="password">
+            <input id="key-alias" placeholder="Enter an alias" type="text">
+            <button id="generate-key-button">Generate Keys</button>
+            <textarea id="generated-public-key" placeholder="Generated public key will appear here" readonly></textarea>
+            <textarea id="generated-private-key" placeholder="Generated private key will appear here" readonly></textarea>
+        </section>
+        <section id="private-keys-section">
+            <h2>Your Private Keys</h2>
+            <table id="private-keys-table">
+                <thead>
+                    <tr>
+                        <th>Alias</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Private keys will be dynamically added here -->
+                </tbody>
+            </table>
+        </section>
+        <section id="address-book-section">
+            <h2>Public Key Address Book</h2>
+            <table id="address-book-table">
+                <thead>
+                    <tr>
+                        <th>Alias</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Address book entries will be dynamically added here -->
+                </tbody>
+            </table>
+            <h3>Import Contact</h3>
+            <input id="import-alias" placeholder="Enter alias" type="text">
+            <input id="import-name" placeholder="Enter name" type="text">
+            <input id="import-email" placeholder="Enter email" type="email">
+            <textarea id="import-public-key" placeholder="Enter public key"></textarea>
+            <button id="import-contact-button">Import Contact</button>
+        </section>
+    </div>
 </div>
 <script src="app.js"></script>
 </body>
