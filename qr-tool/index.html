@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/merge-images"></script>
+    <link href="../styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="main-nav">
+    <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../npm-checker/index.html">NPM Upgrader</a></li>
+        <li><a href="../python-pypi-checker/index.html">Pip Upgrader</a></li>
+        <li><a href="../datetime-formats/index.html">Datetime Converter</a></li>
+        <li><a href="../symmetric-encryption/index.html">Symmetric Encryption Tool</a></li>
+        <li><a href="../pgp-messages/index.html">PGP Message Generator/Reader</a></li>
+        <li><a href="../hashing-tool/index.html">Hashing Tool</a></li>
+        <li><a href="../qr-tool/index.html">QR Code Generator</a></li>
+    </ul>
+</nav>
+<h1 class="header">QR Code Generator</h1>
+<form id="qrForm" class="qr-form">
+    <label for="data" class="form-label">Data:</label>
+    <textarea id="data" name="data" class="form-input" required aria-label="Data"></textarea>
+    <label for="errorCorrectionLevel" class="form-label">Error Correction Level:</label>
+    <select id="errorCorrectionLevel" name="errorCorrectionLevel" class="form-input" aria-label="Error Correction Level">
+        <option value="L">L - Low</option>
+        <option value="M">M - Medium</option>
+        <option value="Q">Q - Quartile</option>
+        <option value="H">H - High</option>
+    </select>
+    <label for="size" class="form-label">Size (px):</label>
+    <input type="number" id="size" name="size" class="form-input" value="256" required aria-label="Size">
+    <label for="foregroundColor" class="form-label">Foreground Color:</label>
+    <input type="color" id="foregroundColor" name="foregroundColor" class="form-input" value="#000000" aria-label="Foreground Color">
+    <label for="backgroundColor" class="form-label">Background Color:</label>
+    <input type="color" id="backgroundColor" name="backgroundColor" class="form-input" value="#ffffff" aria-label="Background Color">
+    <label for="logo" class="form-label">Logo:</label>
+    <input type="file" id="logo" name="logo" class="form-input" accept="image/*" aria-label="Logo">
+    <button type="submit" class="form-button">Generate QR Code</button>
+</form>
+<div id="result" class="result">
+    <img id="qrCode" src="" alt="QR Code" class="qr-code">
+    <button id="downloadButton" class="form-button">Download QR Code</button>
+</div>
+<script>
+    document.getElementById('qrForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const data = document.getElementById('data').value;
+        const errorCorrectionLevel = document.getElementById('errorCorrectionLevel').value;
+        const size = parseInt(document.getElementById('size').value, 10);
+        const foregroundColor = document.getElementById('foregroundColor').value;
+        const backgroundColor = document.getElementById('backgroundColor').value;
+        const qrCodeElement = document.getElementById('qrCode');
+        const downloadButton = document.getElementById('downloadButton');
+
+        try {
+            const qrCodeDataUrl = await QRCode.toDataURL(data, {
+                errorCorrectionLevel,
+                width: size,
+                height: size,
+                color: {
+                    dark: foregroundColor,
+                    light: backgroundColor
+                }
+            });
+
+            const logoFile = document.getElementById('logo').files[0];
+            if (logoFile) {
+                const reader = new FileReader();
+                reader.onload = async function(event) {
+                    const logoDataUrl = event.target.result;
+                    const logoSize = Math.min(size * 0.25, 64); // Ensure logo size does not exceed 64px
+                    const resizedLogoDataUrl = await resizeImage(logoDataUrl, logoSize, logoSize);
+                    const mergedImage = await mergeImages([
+                        { src: qrCodeDataUrl },
+                        { src: resizedLogoDataUrl, x: (size - logoSize) / 2, y: (size - logoSize) / 2, width: logoSize, height: logoSize }
+                    ]);
+                    qrCodeElement.src = mergedImage;
+                    qrCodeElement.style.display = 'block';
+                    downloadButton.style.display = 'block';
+                    downloadButton.href = mergedImage;
+                    downloadButton.download = 'qrcode.png';
+                };
+                reader.readAsDataURL(logoFile);
+            } else {
+                qrCodeElement.src = qrCodeDataUrl;
+                qrCodeElement.style.display = 'block';
+                downloadButton.style.display = 'block';
+                downloadButton.href = qrCodeDataUrl;
+                downloadButton.download = 'qrcode.png';
+            }
+        } catch (err) {
+            alert('Failed to generate QR code. Please try again.');
+            console.error('Failed to generate QR code:', err);
+        }
+    });
+    document.getElementById('downloadButton').addEventListener('click', function () {
+        const qrCodeDataUrl = document.getElementById('qrCode').src;
+        const link = document.createElement('a');
+        link.href = qrCodeDataUrl;
+        link.download = 'qrcode.png';
+        link.click();
+    });
+
+    async function resizeImage(src, width, height) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                resolve(canvas.toDataURL());
+            };
+            img.onerror = reject;
+            img.src = src;
+        });
+    }
+</script>
+</body>
+</html>
