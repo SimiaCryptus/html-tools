@@ -248,14 +248,7 @@ function addToAddressBook(alias, name, email, publicKey, keyType = 'public') {
     row.insertCell(0).innerHTML = `<a href="#" class="key-link" data-alias="${alias}" data-type="${keyType}">${alias}</a>`;
     row.insertCell(1).innerHTML = name;
     row.insertCell(2).innerHTML = email;
-
-    // Store public key in a hidden textarea
-    const publicKeyTextarea = document.createElement('textarea');
-    publicKeyTextarea.id = `public-key-${alias}`;
-    publicKeyTextarea.style.display = 'none';
-    publicKeyTextarea.value = publicKey;
-    document.body.appendChild(publicKeyTextarea);
-
+    
     if (keyType === 'private') {
         const generatedKeys = JSON.parse(localStorage.getItem('generatedKeys') || '{}');
         generatedKeys[alias] = {name, email, publicKey};
