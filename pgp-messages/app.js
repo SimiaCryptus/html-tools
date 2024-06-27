@@ -53,7 +53,7 @@ document.getElementById('encrypt-button').addEventListener('click', async () => 
     // Get the message and public key from the textareas
     const message = document.getElementById('message-to-encrypt').value;
     const publicKeyAlias = document.getElementById('public-key-select').value;
-    
+
     if (!publicKeyAlias) {
         alert('Please select a public key.');
         return;
@@ -147,6 +147,7 @@ function populateKeyDropdowns() {
         privateKeySelect.appendChild(option);
     }
 }
+
 document.getElementById('generate-key-button').addEventListener('click', async () => {
     const name = document.getElementById('key-name').value;
     const email = document.getElementById('key-email').value;
@@ -278,7 +279,7 @@ document.getElementById('import-contact-button').addEventListener('click', () =>
 function loadContacts() {
     const addressBook = document.getElementById('address-book-table').getElementsByTagName('tbody')[0];
     const privateKeysTable = document.getElementById('private-keys-table').getElementsByTagName('tbody')[0];
-    
+
     // Clear existing rows
     addressBook.innerHTML = '';
     privateKeysTable.innerHTML = '';
@@ -312,6 +313,8 @@ closeBtn.onclick = () => modal.style.display = 'none';
 window.onclick = (event) => {
     if (event.target == modal) {
         modal.style.display = 'none';
+    } else {
+        alert(`No ${keyType} key found for alias: ${alias}`);
     }
 };
 
@@ -325,19 +328,25 @@ document.addEventListener('click', (event) => {
 });
 
 function showKeyModal(alias, keyType) {
-    let keyContent;
+    let keyDetails = {};
     if (keyType === 'public') {
         const contacts = JSON.parse(localStorage.getItem('contacts') || '{}');
-        keyContent = contacts[alias]?.publicKey;
+        keyDetails = contacts[alias] || {};
         modalTitle.textContent = `Public Key for ${alias}`;
     } else if (keyType === 'private') {
         const generatedKeys = JSON.parse(localStorage.getItem('generatedKeys') || '{}');
-        keyContent = generatedKeys[alias]?.privateKey;
+        keyDetails = generatedKeys[alias] || {};
         modalTitle.textContent = `Private Key for ${alias}`;
     }
 
-    if (keyContent) {
-        modalContent.value = keyContent;
+    if (Object.keys(keyDetails).length > 0) {
+        let detailsHTML = `
+            <p><strong>Alias:</strong> ${alias}</p>
+            <p><strong>Name:</strong> ${keyDetails.name || 'N/A'}</p>
+            <p><strong>Email:</strong> ${keyDetails.email || 'N/A'}</p>
+            <textarea readonly>${keyType === 'public' ? keyDetails.publicKey : keyDetails.privateKey}</textarea>
+        `;
+        modalContent.innerHTML = detailsHTML;
         modal.style.display = 'block';
         deleteKeyBtn.onclick = () => {
             confirmDeleteKey(alias, keyType);
