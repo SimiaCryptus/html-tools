@@ -401,7 +401,7 @@ function showKeyModal(alias, keyType) {
             hideQRCode(); // Hide QR code when deleting key
             loadContacts();
         }
-        generateQRCode(keyDetails.publicKey); // Generate QR code for public key
+        generateQRCode(bookmarkLink); // Generate QR code for bookmark link
     } else {
         hideQRCode(); // Hide QR code if no key details are found
         alert(`No ${keyType} key found for alias: ${alias}`);
@@ -453,7 +453,7 @@ async function generateQRCode(publicKey) {
     const qrCodeElement = document.getElementById('qrCode');
     const qrCodeContainer = document.getElementById('qrCodeContainer');
     try {
-        const qrCodeDataUrl = await QRCode.toDataURL(publicKey, {
+        const qrCodeDataUrl = await QRCode.toDataURL(bookmarkLink, {
             errorCorrectionLevel: 'H',
             width: 256,
             height: 256,
