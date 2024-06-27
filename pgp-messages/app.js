@@ -1,5 +1,6 @@
 // Function to switch tabs
 function openTab(event, tabName) {
+    console.log(`Switching to tab: ${tabName}`);
     const tabs = document.getElementsByClassName('tab-content');
     for (let i = 0; i < tabs.length; i++) {
         tabs[i].style.display = 'none';
@@ -14,68 +15,84 @@ function openTab(event, tabName) {
         tabButtons[i].classList.remove('active');
     }
     event.currentTarget.classList.add('active');
+    console.log(`Tab switched to: ${tabName}`);
 }
 
 // Initialize tabs
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM content loaded. Initializing application...');
     loadContacts();
     importKeyFromURL();
     const firstTabButton = document.querySelector('.tab-button');
     if (firstTabButton) {
+        console.log('Clicking first tab button');
         firstTabButton.click();
     } else {
+        console.warn('No tab buttons found');
         alert('Key not found');
     }
+    console.log('Application initialized');
 });
 
 function confirmDeleteKey(alias, keyType) {
+    console.log(`Confirming deletion of ${keyType} key for alias: ${alias}`);
     if (confirm(`Are you sure you want to delete the ${keyType} key for ${alias}?`)) {
         deleteKey(alias, keyType);
     }
 }
 
 function deleteKey(alias, keyType) {
+    console.log(`Deleting ${keyType} key for alias: ${alias}`);
     if (keyType === 'public') {
         const contacts = JSON.parse(localStorage.getItem('contacts') || '{}');
         delete contacts[alias];
         localStorage.setItem('contacts', JSON.stringify(contacts));
+        console.log(`Public key deleted for alias: ${alias}`);
     } else if (keyType === 'private') {
         const generatedKeys = JSON.parse(localStorage.getItem('generatedKeys') || '{}');
         delete generatedKeys[alias];
         localStorage.setItem('generatedKeys', JSON.stringify(generatedKeys));
+        console.log(`Private key deleted for alias: ${alias}`);
     }
 
     // Update the UI
     loadContacts();
     modal.style.display = 'none';
+    console.log('UI updated after key deletion');
 }
 
 // Function to handle the encryption process
 document.getElementById('encrypt-button').addEventListener('click', async () => {
+    console.log('Encryption process started');
     // Get the message and public key from the textareas
     const message = document.getElementById('message-to-encrypt').value;
     const publicKeyAlias = document.getElementById('public-key-select').value;
 
     if (!publicKeyAlias) {
+        console.warn('No public key selected for encryption');
         alert('Please select a public key.');
         return;
     }
 
     const contacts = JSON.parse(localStorage.getItem('contacts') || '{}');
     const publicKeyArmored = contacts[publicKeyAlias].publicKey;
+    console.log(`Using public key for alias: ${publicKeyAlias}`);
 
     try {
         // Read the public key
         const publicKey = await openpgp.readKey({armoredKey: publicKeyArmored});
+        console.log('Public key read successfully');
 
         // Encrypt the message
         const encryptedMessage = await openpgp.encrypt({
             message: await openpgp.createMessage({text: message}),
             encryptionKeys: publicKey
         });
+        console.log('Message encrypted successfully');
 
         // Display the encrypted message
         document.getElementById('encrypted-message').value = encryptedMessage;
+        console.log('Encrypted message displayed');
     } catch (error) {
         console.error('Error encrypting message:', error);
         alert('Failed to encrypt the message. Please check the public key and try again.');
@@ -83,18 +100,21 @@ document.getElementById('encrypt-button').addEventListener('click', async () => 
 });
 
 document.getElementById('decrypt-button').addEventListener('click', async () => {
+    console.log('Decryption process started');
     // Get the encrypted message, private key, and passphrase from the textareas and input
     const encryptedMessage = document.getElementById('message-to-decrypt').value;
     const privateKeyAlias = document.getElementById('private-key-select').value;
     const passphrase = document.getElementById('passphrase').value;
 
     if (!privateKeyAlias) {
+        console.warn('No private key selected for decryption');
         alert('Please select a private key.');
         return;
     }
 
     const generatedKeys = JSON.parse(localStorage.getItem('generatedKeys') || '{}');
     const privateKeyArmored = generatedKeys[privateKeyAlias].privateKey;
+    console.log(`Using private key for alias: ${privateKeyAlias}`);
 
     try {
         // Read and decrypt the private key
@@ -102,20 +122,24 @@ document.getElementById('decrypt-button').addEventListener('click', async () => 
             privateKey: await openpgp.readPrivateKey({armoredKey: privateKeyArmored}),
             passphrase
         });
+        console.log('Private key decrypted successfully');
 
         // Read the encrypted message
         const message = await openpgp.readMessage({
             armoredMessage: encryptedMessage
         });
+        console.log('Encrypted message read successfully');
 
         // Decrypt the message
         const {data: decryptedMessage} = await openpgp.decrypt({
             message,
             decryptionKeys: privateKey
         });
+        console.log('Message decrypted successfully');
 
         // Display the decrypted message
         document.getElementById('decrypted-message').value = decryptedMessage;
+        console.log('Decrypted message displayed');
     } catch (error) {
         console.error('Error decrypting message:', error);
         alert('Failed to decrypt the message. Please check the private key, passphrase, and encrypted message, and try again.');
@@ -124,51 +148,65 @@ document.getElementById('decrypt-button').addEventListener('click', async () => 
 
 // Function to populate key dropdowns
 function populateKeyDropdowns() {
+    console.log('Populating key dropdowns');
     const publicKeySelect = document.getElementById('public-key-select');
     const privateKeySelect = document.getElementById('private-key-select');
 
     // Clear existing options
-    publicKeySelect.innerHTML = '<option value="">Select recipient\'s public key</option>';
-    privateKeySelect.innerHTML = '<option value="">Select your private key</option>';
+    if (publicKeySelect) {
+        publicKeySelect.innerHTML = '<option value="">Select recipient\'s public key</option>';
+        console.log('Public key dropdown cleared');
+    }
+    if (privateKeySelect) {
+        privateKeySelect.innerHTML = '<option value="">Select your private key</option>';
+        console.log('Private key dropdown cleared');
+    }
 
     // Populate public keys
     const contacts = JSON.parse(localStorage.getItem('contacts') || '{}');
-    for (const [alias, contact] of Object.entries(contacts)) {
-        const option = document.createElement('option');
-        option.value = alias;
-        option.textContent = `${alias} (${contact.name})`;
-        publicKeySelect.appendChild(option);
+    if (publicKeySelect) {
+        console.log(`Populating ${Object.keys(contacts).length} public keys`);
+        for (const [alias, contact] of Object.entries(contacts)) {
+            const option = document.createElement('option');
+            option.value = alias;
+            option.textContent = `${alias} (${contact.name})`;
+            publicKeySelect.appendChild(option);
+        }
     }
 
     // Populate private keys
     const generatedKeys = JSON.parse(localStorage.getItem('generatedKeys') || '{}');
-    for (const [alias, key] of Object.entries(generatedKeys)) {
-        const option = document.createElement('option');
-        option.value = alias;
-        option.textContent = `${alias} (${key.name})`;
-        privateKeySelect.appendChild(option);
+    if (privateKeySelect) {
+        console.log(`Populating ${Object.keys(generatedKeys).length} private keys`);
+        for (const [alias, key] of Object.entries(generatedKeys)) {
+            const option = document.createElement('option');
+            option.value = alias;
+            option.textContent = `${alias} (${key.name})`;
+            privateKeySelect.appendChild(option);
+        }
     }
+    console.log('Key dropdowns populated');
 }
 
 document.getElementById('generate-key-button').addEventListener('click', async () => {
+    console.log('Key generation process started');
     const name = document.getElementById('key-name').value;
     const email = document.getElementById('key-email').value;
     const passphrase = document.getElementById('key-passphrase').value;
     const alias = document.getElementById('key-alias').value;
 
     // Debugging information
-    console.log('Generating keys with the following details:');
-    console.log('Name:', name);
-    console.log('Email:', email);
-    console.log('Passphrase:', passphrase);
+    console.log(`Generating keys for: Name: ${name}, Email: ${email}, Alias: ${alias}`);
 
     // Check if any of the required fields are empty
     if (!name || !email || !passphrase || !alias) {
+        console.warn('Missing required fields for key generation');
         alert('Name, email, passphrase, and alias are required to generate keys.');
         return;
     }
 
     try {
+        console.log('Generating OpenPGP key pair...');
         const key = await openpgp.generateKey({
             type: 'ecc', // Type of the key, defaults to ECC
             curve: 'curve25519', // ECC curve name, defaults to curve25519
@@ -176,17 +214,23 @@ document.getElementById('generate-key-button').addEventListener('click', async (
             format: 'armored',
             passphrase: passphrase.trim()
         });
+        console.log('Key pair generated successfully');
 
         // Display the generated keys
         document.getElementById('generated-public-key').value = key.publicKey;
         document.getElementById('generated-private-key').value = key.privateKey;
+        console.log('Generated keys displayed');
 
         // Add to address book
         addToAddressBook(alias, name, email, key.publicKey);
+        console.log(`Public key added to address book for alias: ${alias}`);
 
         // Save generated keys to local storage
         saveGeneratedKeys(alias, name, email, key.publicKey, key.privateKey);
+        console.log(`Generated keys saved to local storage for alias: ${alias}`);
+
         addToPrivateKeysTable(alias, name, email);
+        console.log(`Private key added to table for alias: ${alias}`);
     } catch (error) {
         console.error('Error generating keys:', error);
         alert('Failed to generate keys. Please try again.');
@@ -386,10 +430,28 @@ function importKeyFromURL() {
 
             addToAddressBook(keyData.alias, keyData.name, keyData.email, keyData.publicKey);
             loadContacts();
+            // Set the imported key as the default selection in the public key dropdown
+            setDefaultPublicKey(keyData.alias);
             alert(`Public key for ${keyData.alias} has been imported successfully.`);
         } catch (error) {
             console.error('Error importing key from URL:', error);
             alert('Failed to import key from URL. The data might be corrupted or invalid.');
+        }
+    }
+}
+
+// Helper function to set the default public key in the dropdown
+function setDefaultPublicKey(alias) {
+    const publicKeySelect = document.getElementById('public-key-select');
+    if (publicKeySelect) {
+        const publicKeySelect = document.getElementById('public-key-select');
+        if (publicKeySelect) {
+            for (let i = 0; i < publicKeySelect.options.length; i++) {
+                if (publicKeySelect.options[i].value === alias) {
+                    publicKeySelect.selectedIndex = i;
+                    break;
+                }
+            }
         }
     }
 }
