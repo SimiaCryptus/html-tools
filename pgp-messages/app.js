@@ -18,6 +18,8 @@ function openTab(event, tabName) {
 
 // Initialize tabs
 document.addEventListener('DOMContentLoaded', () => {
+    loadContacts();
+    importKeyFromURL();
     const firstTabButton = document.querySelector('.tab-button');
     if (firstTabButton) {
         firstTabButton.click();
@@ -313,8 +315,6 @@ closeBtn.onclick = () => modal.style.display = 'none';
 window.onclick = (event) => {
     if (event.target == modal) {
         modal.style.display = 'none';
-    } else {
-        alert(`No ${keyType} key found for alias: ${alias}`);
     }
 };
 
@@ -340,17 +340,56 @@ function showKeyModal(alias, keyType) {
     }
 
     if (Object.keys(keyDetails).length > 0) {
+        const bookmarkData = encodeURIComponent(JSON.stringify({
+            alias: alias,
+            name: keyDetails.name,
+            email: keyDetails.email,
+            publicKey: encodeURIComponent(keyDetails.publicKey)
+        }));
+        const baseUrl = window.location.href.split('#')[0]; // Strip any existing hash
+        const bookmarkLink = `${baseUrl}#?import=${bookmarkData}`;
         let detailsHTML = `
             <p><strong>Alias:</strong> ${alias}</p>
             <p><strong>Name:</strong> ${keyDetails.name || 'N/A'}</p>
             <p><strong>Email:</strong> ${keyDetails.email || 'N/A'}</p>
             <textarea readonly>${keyType === 'public' ? keyDetails.publicKey : keyDetails.privateKey}</textarea>
+            ${keyType === 'public' ? `<p><a href="${bookmarkLink}" id="bookmark-link">Bookmark this public key</a></p>` : ''}
         `;
         modalContent.innerHTML = detailsHTML;
         modal.style.display = 'block';
         deleteKeyBtn.onclick = () => {
             confirmDeleteKey(alias, keyType);
             loadContacts();
+        }
+    } else {
+        alert(`No ${keyType} key found for alias: ${alias}`);
+    }
+}
+
+// Function to import key from URL parameters
+function importKeyFromURL() {
+    const hash = window.location.hash;
+    const importData = hash.startsWith('#?import=') ? hash.slice(9) : null;
+    if (importData) {
+        try {
+            // First, try to parse as-is
+            let keyData;
+            try {
+                keyData = JSON.parse(decodeURIComponent(importData));
+            } catch (e) {
+                console.error('Error parsing import data:', e);
+                throw e; // Re-throw to be caught by the outer try-catch
+            }
+            
+            // Decode the public key separately, as it might contain newlines
+            keyData.publicKey = decodeURIComponent(keyData.publicKey).replace(/\\n/g, '\n');
+
+            addToAddressBook(keyData.alias, keyData.name, keyData.email, keyData.publicKey);
+            loadContacts();
+            alert(`Public key for ${keyData.alias} has been imported successfully.`);
+        } catch (error) {
+            console.error('Error importing key from URL:', error);
+            alert('Failed to import key from URL. The data might be corrupted or invalid.');
         }
     }
 }
