@@ -1,6 +1,7 @@
 // Function to switch tabs
 function openTab(event, tabName) {
     console.log(`Switching to tab: ${tabName}`);
+    hideQRCode(); // Hide QR code when switching tabs
     const tabs = document.getElementsByClassName('tab-content');
     for (let i = 0; i < tabs.length; i++) {
         tabs[i].style.display = 'none';
@@ -352,6 +353,7 @@ closeBtn.onclick = () => modal.style.display = 'none';
 window.onclick = (event) => {
     if (event.target == modal) {
         modal.style.display = 'none';
+        hideQRCode(); // Hide QR code when clicking outside modal
     }
 };
 
@@ -396,12 +398,25 @@ function showKeyModal(alias, keyType) {
         modal.style.display = 'block';
         deleteKeyBtn.onclick = () => {
             confirmDeleteKey(alias, keyType);
+            hideQRCode(); // Hide QR code when deleting key
             loadContacts();
         }
+        generateQRCode(keyDetails.publicKey); // Generate QR code for public key
     } else {
+        hideQRCode(); // Hide QR code if no key details are found
         alert(`No ${keyType} key found for alias: ${alias}`);
     }
 }
+ // Function to hide QR code
+ function hideQRCode() {
+    const qrCodeContainer = document.getElementById('qrCodeContainer');
+     if(qrCodeContainer) qrCodeContainer.style.display = 'none';
+ }
+ 
+ closeBtn.onclick = () => {
+     modal.style.display = 'none';
+     hideQRCode(); // Hide QR code when closing modal
+};
 
 // Function to import key from URL parameters
 function importKeyFromURL() {
@@ -430,6 +445,27 @@ function importKeyFromURL() {
             console.error('Error importing key from URL:', error);
             alert('Failed to import key from URL. The data might be corrupted or invalid.');
         }
+    }
+}
+
+// Function to generate QR code for public key
+async function generateQRCode(publicKey) {
+    const qrCodeElement = document.getElementById('qrCode');
+    const qrCodeContainer = document.getElementById('qrCodeContainer');
+    try {
+        const qrCodeDataUrl = await QRCode.toDataURL(publicKey, {
+            errorCorrectionLevel: 'H',
+            width: 256,
+            height: 256,
+            color: {
+                dark: '#000000',
+                light: '#ffffff'
+            }
+        });
+        qrCodeElement.src = qrCodeDataUrl;
+        qrCodeContainer.style.display = 'block';
+    } catch (err) {
+        console.error('Failed to generate QR code:', err);
     }
 }
 

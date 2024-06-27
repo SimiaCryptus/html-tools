@@ -339,3 +339,27 @@ button:not(.tab-button):hover {
     max-width: 600px;
     border-radius: 10px;
 }
+
+/* QR Code Styles */
+
+.qr-code-container {
+    display: none;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.qr-code {
+    max-width: 100%;
+    height: auto;
+}
+ 
+ .qr-code-container {
+    display: block;
+     text-align: center;
+     margin-bottom: 20px;
+ }
+ 
+ .qr-code {
+     max-width: 100%;
+     height: auto;
+ }
