@@ -454,10 +454,10 @@ async function generateQRCode(publicKey) {
     const qrCodeContainer = document.getElementById('qrCodeContainer');
     const bookmarkLink = document.getElementById('bookmark-link');
     try {
-        const qrCodeDataUrl = await QRCode.toDataURL(bookmarkLink, {
+        const qrCodeDataUrl = await QRCode.toDataURL(bookmarkLink.href, {
             errorCorrectionLevel: 'H',
-            width: 256,
-            height: 256,
+            width: 512,
+            height: 512,
             color: {
                 dark: '#000000',
                 light: '#ffffff'
