@@ -452,6 +452,7 @@ function importKeyFromURL() {
 async function generateQRCode(publicKey) {
     const qrCodeElement = document.getElementById('qrCode');
     const qrCodeContainer = document.getElementById('qrCodeContainer');
+    const bookmarkLink = document.getElementById('bookmark-link');
     try {
         const qrCodeDataUrl = await QRCode.toDataURL(bookmarkLink, {
             errorCorrectionLevel: 'H',
