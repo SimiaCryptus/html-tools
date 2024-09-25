@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Transformer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Transformer</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="main-nav">
+    <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../npm-checker/index.html">NPM Upgrader</a></li>
+        <li><a href="../python-pypi-checker/index.html">Pip Upgrader</a></li>
+        <li><a href="../datetime-formats/index.html">Datetime Converter</a></li>
+        <li><a href="../symmetric-encryption/index.html">Symmetric Encryption Tool</a></li>
+        <li><a href="../pgp-messages/index.html">PGP Message Generator/Reader</a></li>
+        <li><a href="../hashing-tool/index.html">Hashing Tool</a></li>
+        <li><a href="../qr-tool/index.html">QR Code Generator</a></li>
+        <li><a href="../refonter/index.html">Text Transformer</a></li>
+    </ul>
+</nav>
+    <div class="container">
+        <h1>Text Transformer</h1>
+        <div class="input-section">
+            <label for="input-text">Enter your text:</label>
+            <textarea id="input-text" rows="5" placeholder="Type or paste your text here"></textarea>
+            <select id="style-select"></select>
+            <button id="transform-button">Transform</button>
+        </div>
+        <div class="output-section">
+        <div class="options">
+            <label>
+                <input type="checkbox" id="auto-transform" checked>
+                Auto-transform
+            </label>
+        </div>
+            <h2>Transformed Text:</h2>
+            <textarea id="output-text" rows="5" readonly></textarea>
+            <button id="copy-button">Copy</button>
+        </div>
+    </div>
+    <script type="module" src="app.js"></script>
+</body>
+</html>
